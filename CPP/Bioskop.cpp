@@ -18,6 +18,7 @@ class Bioskop {
         }
 
         Bioskop(int id, string name, string address, int totalStudios, float rating) {
+            this->id = id;
             this->name = name;
             this->address = address;
             this->totalStudios = totalStudios;
