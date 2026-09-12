@@ -2,11 +2,21 @@
 #include<string>
 #include<vector>
 #include<cmath>
+#include<cstring>
+#include<iomanip>
 #include "Bioskop.cpp"
 
 using namespace std;
 vector<Bioskop> dataBioskop;
-int col[5] = {0};
+int col[5];
+
+void initCol() {
+    col[0] = strlen("ID");
+    col[1] = strlen("Nama Bioskop");
+    col[2] = strlen("Alamat");
+    col[3] = strlen("Total Studio");
+    col[4] = strlen("Rating");
+}
 
 void intro() {
     cout << "-----------------------BIOSKOP-----------------------\n";
@@ -40,8 +50,10 @@ bool isFloat(string s) {
     int flag = 0;
     for(int i = 0; i < s.length(); i++) {
         if((s[i] < '0' || s[i] > '9') && s[i] != '.') return false;
-        if(s[i] == '.' && flag > 0) return false;
-        else flag++;
+        if(s[i] == '.' && flag > 0) {
+            if(flag > 0) return false;
+            else flag++;
+        }
     }
     return true;
 }
@@ -91,6 +103,10 @@ float inputFloat(string message) {
         }
 
         ans = stof(input);
+        if(ans > 5.00 || ans < 0) {
+            flag = 0;
+            cout << "Rating hanya skala 0-5\n";
+        }
     } while(!flag);
 
     return ans;
@@ -99,7 +115,6 @@ float inputFloat(string message) {
 string inputString(string message) {
     string ans;
     cout << message;
-    cin.ignore();
     getline(cin, ans);
     return ans;
 }
@@ -113,8 +128,46 @@ void insert() {
     int totalStudios = inputInteger("Masukan Jumlah Studio : ", 0);    
     float rating = inputFloat("Masukan Rating Bioskop : ");
 
+    if(col[0] < log10(id)+1) col[0] = log10(id)+1;
+    if(col[1] < name.length()) col[1] = name.length();
+    if(col[2] < address.length()) col[2] = address.length();
+    if(col[3] < log10(totalStudios)+1) col[3] = log10(totalStudios)+1;
+    
     Bioskop now = Bioskop(id, name, address, totalStudios, rating);
     dataBioskop.push_back(now);
+}
+
+void separator() {
+    cout << "+-"; for(int i = 0; i < col[0]; i++) cout << "-";
+    cout << "-+-"; for(int i = 0; i < col[1]; i++) cout << "-";
+    cout << "-+-"; for(int i = 0; i < col[2]; i++) cout << "-";
+    cout << "-+-"; for(int i = 0; i < col[3]; i++) cout << "-";
+    cout << "-+-"; for(int i = 0; i < col[4]; i++) cout << "-";
+    cout << "-+" << endl;
+}
+
+void row(string col1, string col2, string col3, string col4, string col5) {
+    cout << "| "; cout << col1; for(int i = 0; i < col[0]-col1.length(); i++) cout << " "; 
+    cout << " | "; cout << col2; for(int i = 0; i < col[1]-col2.length(); i++) cout << " ";
+    cout << " | "; cout << col3; for(int i = 0; i < col[2]-col3.length(); i++) cout << " ";
+    cout << " | "; cout << col4; for(int i = 0; i < col[3]-col4.length(); i++) cout << " ";
+    cout << " | "; cout << col5; for(int i = 0; i < col[4]-col5.length(); i++) cout << " ";
+    cout << " |" << endl;
+}
+
+void show() {
+    // print header
+    separator();
+    row("ID", "Nama Bioskop", "Alamat", "Total Studio", "Rating");
+    separator();
+
+    // print row
+    for(auto data : dataBioskop) {
+        stringstream rate;
+        rate << fixed << setprecision(2) << data.getRating();
+        row(to_string(data.getId()), data.getName(), data.getAddress(), to_string(data.getTotalStudios()), rate.str());
+    }
+    separator();
 }
 
 void del() {
@@ -133,12 +186,9 @@ void del() {
     cout << "ID Bioskop tidak ditemukan\n";
 }
 
-void show() {
-}
-
 int main() {
+    initCol();
     intro();
-    cout << col[0] << endl;
 
     while(true) {
         cout << "Pilih Opsi : " << endl;
@@ -151,6 +201,7 @@ int main() {
                 insert();
                 break;
             case 2:
+                show();
                 break;
             case 3:
                 break;
