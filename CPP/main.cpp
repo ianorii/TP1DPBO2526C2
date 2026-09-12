@@ -57,58 +57,27 @@ bool isFloat(string s) {
     return true;
 }
 
-int inputInteger(string message, int type) {
+string inputNumber(string message, int type) {
     string input;
-    int flag;
-    int ans;
 
-    do {
-        flag = 1;
-        cout << message;
-        getline(cin, input);
+    cout << message;
+    getline(cin, input);
+    
+    if(!type) {
         while(!isInteger(input)) {
             cout << "inputan cuma boleh bilangan bulat yeah\n";
             cout << message;
             getline(cin, input);
         }
-        
-        ans = stoi(input);
-        if(ans <= 0) {
-            cout << "nilainya harus lebih dari 0\n";
-            flag = 0;
-        } else if(type == 1 && searchId(ans)) {
-            cout << "udah ada id nya kocak\n";
-            flag = 0;
-        }
-    } while(!flag);
-
-    return ans;
-}
-
-float inputFloat(string message) {
-    string input;
-    float ans;
-    int flag;
-
-    do {
-        flag = 1;
-        cout << message;
-        getline(cin, input);
-        
+    } else {
         while(!isFloat(input)) {
-            cout << "inputan tidak sesuai format\n";
+            cout << "ini bukan bilangan real woy\n";
             cout << message;
             getline(cin, input);
         }
+    }
 
-        ans = stof(input);
-        if(ans > 5.00 || ans < 0) {
-            flag = 0;
-            cout << "Rating hanya skala 0-5\n";
-        }
-    } while(!flag);
-
-    return ans;
+    return input;
 }
 
 string inputString(string message) {
@@ -121,11 +90,15 @@ string inputString(string message) {
 void insert() {
     cout << "---------------Masukan Data Bioskop---------------\n";
     
-    int id = inputInteger("Masukan ID : ", 1);
+    int id = stoi(inputNumber("Masukan ID : ", 1));
+    while(searchId(id)) {
+        cout << "ID sudah ada\n";
+        id = stoi(inputNumber("Masukan ID : ", 1));
+    }
     string name = inputString("Masukan Nama Bioskop : ");
     string address = inputString("Masukan Alamat Bioskop : ");
-    int totalStudios = inputInteger("Masukan Jumlah Studio : ", 0);    
-    float rating = inputFloat("Masukan Rating Bioskop : ");
+    int totalStudios = stoi(inputNumber("Masukan Jumlah Studio : ", 0));    
+    float rating = stof(inputNumber("Masukan Rating Bioskop : ", 1));
 
     if(col[0] < log10(id)+1) col[0] = log10(id)+1;
     if(col[1] < name.length()) col[1] = name.length();
@@ -169,12 +142,75 @@ void show() {
     separator();
 }
 
+string updateNumber(string message, auto base, int type) {
+    string str;
+
+    cout << message;
+    getline(cin, str);
+    if(str.empty()) return to_string(base);
+    
+    if(!type) {
+        while(!isInteger(str)) {
+            cout << "masukin bilangan bulat yeah\n";
+            cout << message;
+            getline(cin, str);
+            if(str.empty()) return to_string(base);
+        }
+    } else {
+        while(!isFloat(str)) {
+            cout << "ini bukan float\n";
+            cout << message;
+            getline(cin, str);
+            if(str.empty()) return to_string(base);
+        }
+    }
+
+    return str;
+}
+
+void update() {
+    cout << "---------------Update Data Bioskop---------------\n";
+    int id = stoi(inputNumber("Masukan ID : ", 0));
+    
+    int i = 0;
+    for(auto data: dataBioskop) {
+        if(data.getId() == id) {
+            string str1 = "Masukan ID baru [" + to_string(data.getId()) + "] : ";
+            id = stoi(updateNumber(str1, data.getId(), 0));
+            while(id != data.getId() && searchId(id)) {
+                cout << "ID udah ada\n";
+                id = stoi(updateNumber(str1, data.getId(), 0));
+            }
+            
+            string str2 = "Masukan Nama baru [" + data.getName()+ "] : "; string name = inputString(str2);
+            string str3 = "Masukan Alamat baru [" + data.getAddress() + "] : "; string address = inputString(str3);
+
+            string str4 = "Masukan Jumlah Studio [" + to_string(data.getTotalStudios()) + "] : ";
+            int totalStudios = stoi(updateNumber(str4, data.getTotalStudios(), 0));
+            
+            string str5 = "Masukan Rating Bioskop [" + to_string(data.getRating()) + "] : ";
+            float rating = stof(updateNumber(str5, data.getRating(), 1));
+
+            dataBioskop[i].setId(id);
+            dataBioskop[i].setName(name.empty() ? data.getName() : name);
+            dataBioskop[i].setAddress(address.empty() ? data.getAddress() : address);
+            dataBioskop[i].setTotalStudios(totalStudios);
+            dataBioskop[i].setRating(rating);
+
+            return;
+        }
+        i++;
+    }
+
+    cout << "ID tidak ditemukan\n";
+}
+
 void del() {
     cout << "---------------Hapus Data Bioskop---------------\n";
-    int id = inputInteger("Masukan ID Bioskop : ", 0);
+    int id = stoi(inputNumber("Masukan ID Bioskop : ", 0));
 
     int i = 0;
-    for(auto data : dataBioskop) {
+    for(auto data: dataBioskop) {
         if(data.getId() == id) {
             dataBioskop.erase(dataBioskop.begin() + i);
             return;
@@ -186,7 +222,7 @@ void del() {
 }
 
 void searchData() {
-    int id = inputInteger("Masukan ID Bioskop : ", 0);
+    int id = stoi(inputNumber("Masukan ID Bioskop : ", 0));
     for(auto data : dataBioskop) {
         if(data.getId() == id) {
             separator();
@@ -220,6 +256,7 @@ int main() {
                 show();
                 break;
             case 3:
+                update();
                 break;
             case 4:
                 del();
