@@ -5,6 +5,13 @@
 #include<iomanip>
 #include "Bioskop.cpp"
 
+#define RESET               "\033[0m"
+#define RED                 "\033[31m"
+#define GREEN               "\033[32m"
+#define CYAN                "\033[36m"
+#define YELLOW              "\033[33m"
+#define BOLD                "\033[1m"
+
 using namespace std;
 vector<Bioskop> dataBioskop;
 int col[5];
@@ -18,7 +25,21 @@ void initCol() {
 }
 
 void intro() {
-    cout << "-----------------------BIOSKOP-----------------------\n";
+    cout << BOLD CYAN;
+    cout << "+====================================================+\n";
+    cout << "|           SISTEM MANAJEMEN DATA BIOSKOP            |\n";
+    cout << "+====================================================+\n";
+    cout << RESET;
+    cout << BOLD << "  Daftar Menu :\n" << RESET;
+    cout << CYAN "  [1]" RESET " Insert Data Bioskop\n";
+    cout << CYAN "  [2]" RESET " Tampilkan Semua Data\n";
+    cout << CYAN "  [3]" RESET " Update Data Bioskop\n";
+    cout << CYAN "  [4]" RESET " Hapus Data Bioskop\n";
+    cout << CYAN "  [5]" RESET " Cari Data Bioskop\n";
+    cout << CYAN "  [6]" RESET " Keluar\n";
+    cout << BOLD CYAN;
+    cout << "+====================================================+\n";
+    cout << RESET << endl;
 }
 
 // fungsi memeriksa apakah ID sudah ada
@@ -65,13 +86,13 @@ string inputNumber(string message, int type) {
     
     if(!type) {
         while(!isInteger(input)) {
-            cout << "inputan cuma boleh bilangan bulat yeah\n";
+            cout << RED "  Input harus berupa bilangan bulat.\n" RESET;
             cout << message;
             getline(cin, input);
         }
     } else {
         while(!isFloat(input)) {
-            cout << "ini bukan bilangan real woy\n";
+            cout << RED "  Input harus berupa bilangan desimal.\n" RESET;
             cout << message;
             getline(cin, input);
         }
@@ -88,17 +109,17 @@ string inputString(string message) {
 }
 
 void insert() {
-    cout << "---------------Masukan Data Bioskop---------------\n";
+    cout << BOLD CYAN "\n=============== Masukan Data Bioskop ===============\n" << RESET << endl;
     
-    int id = stoi(inputNumber("Masukan ID : ", 1));
+    int id = stoi(inputNumber("  Masukan ID : ", 1));
     while(searchId(id)) {
-        cout << "ID sudah ada\n";
-        id = stoi(inputNumber("Masukan ID : ", 1));
+        cout << RED "  ID sudah terpakai, gunakan ID lain\n" RESET;
+        id = stoi(inputNumber("  Masukan ID : ", 1));
     }
-    string name = inputString("Masukan Nama Bioskop : ");
-    string address = inputString("Masukan Alamat Bioskop : ");
-    int totalStudios = stoi(inputNumber("Masukan Jumlah Studio : ", 0));    
-    float rating = stof(inputNumber("Masukan Rating Bioskop : ", 1));
+    string name = inputString("  Masukan Nama Bioskop : ");
+    string address = inputString("  Masukan Alamat Bioskop : ");
+    int totalStudios = stoi(inputNumber("  Masukan Jumlah Studio : ", 0));    
+    float rating = stof(inputNumber("  Masukan Rating Bioskop : ", 1));
 
     if(col[0] < log10(id)+1) col[0] = log10(id)+1;
     if(col[1] < name.length()) col[1] = name.length();
@@ -107,6 +128,7 @@ void insert() {
     
     Bioskop now = Bioskop(id, name, address, totalStudios, rating);
     dataBioskop.push_back(now);
+    cout << GREEN "\n  Data Bioskop berhasil ditambahkan!\n" << RESET << endl;
 }
 
 void separator() {
@@ -128,6 +150,13 @@ void row(string col1, string col2, string col3, string col4, string col5) {
 }
 
 void show() {
+    cout << BOLD CYAN "\n=============== Data Bioskop ===============\n" << RESET << endl;
+
+    if(dataBioskop.empty()) {
+        cout << YELLOW "  Belum ada data yang tersimpan.\n" << RESET << endl;
+        return;
+    }
+
     // print header
     separator();
     row("ID", "Nama Bioskop", "Alamat", "Total Studio", "Rating");
@@ -140,6 +169,7 @@ void show() {
         row(to_string(data.getId()), data.getName(), data.getAddress(), to_string(data.getTotalStudios()), rate.str());
     }
     separator();
+    cout << endl;
 }
 
 string updateNumber(string message, auto base, int type) {
@@ -151,14 +181,14 @@ string updateNumber(string message, auto base, int type) {
     
     if(!type) {
         while(!isInteger(str)) {
-            cout << "masukin bilangan bulat yeah\n";
+            cout << RED "  Input harus berupa bilangan bulat.\n" RESET;
             cout << message;
             getline(cin, str);
             if(str.empty()) return to_string(base);
         }
     } else {
         while(!isFloat(str)) {
-            cout << "ini bukan float\n";
+            cout << RED "  Input harus berupa bilangan desimal.\n" RESET;
             cout << message;
             getline(cin, str);
             if(str.empty()) return to_string(base);
@@ -169,26 +199,26 @@ string updateNumber(string message, auto base, int type) {
 }
 
 void update() {
-    cout << "---------------Update Data Bioskop---------------\n";
-    int id = stoi(inputNumber("Masukan ID : ", 0));
+    cout << BOLD CYAN "\n=============== Update Data Bioskop ===============\n" << RESET << endl;
+    int id = stoi(inputNumber("  Masukan ID : ", 0));
     
     int i = 0;
     for(auto data: dataBioskop) {
         if(data.getId() == id) {
-            string str1 = "Masukan ID baru [" + to_string(data.getId()) + "] : ";
+            string str1 = "  Masukan ID baru [" + to_string(data.getId()) + "] : ";
             id = stoi(updateNumber(str1, data.getId(), 0));
             while(id != data.getId() && searchId(id)) {
-                cout << "ID udah ada\n";
+                cout << RED "  ID sudah terpakai, gunakan ID lain\n" RESET;
                 id = stoi(updateNumber(str1, data.getId(), 0));
             }
             
-            string str2 = "Masukan Nama baru [" + data.getName()+ "] : "; string name = inputString(str2);
-            string str3 = "Masukan Alamat baru [" + data.getAddress() + "] : "; string address = inputString(str3);
+            string str2 = "  Masukan Nama baru [" + data.getName()+ "] : "; string name = inputString(str2);
+            string str3 = "  Masukan Alamat baru [" + data.getAddress() + "] : "; string address = inputString(str3);
 
-            string str4 = "Masukan Jumlah Studio [" + to_string(data.getTotalStudios()) + "] : ";
+            string str4 = "  Masukan Jumlah Studio [" + to_string(data.getTotalStudios()) + "] : ";
             int totalStudios = stoi(updateNumber(str4, data.getTotalStudios(), 0));
             
-            string str5 = "Masukan Rating Bioskop [" + to_string(data.getRating()) + "] : ";
+            string str5 = "  Masukan Rating Bioskop [" + to_string(data.getRating()) + "] : ";
             float rating = stof(updateNumber(str5, data.getRating(), 1));
 
             dataBioskop[i].setId(id);
@@ -197,34 +227,38 @@ void update() {
             dataBioskop[i].setTotalStudios(totalStudios);
             dataBioskop[i].setRating(rating);
 
+            cout << GREEN "\n  Data Bioskop berhasil diupdate!\n" << RESET << endl;
             return;
         }
         i++;
     }
 
-    cout << "ID tidak ditemukan\n";
+    cout << RED "\n  ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" << RESET << endl;
 }
 
 void del() {
-    cout << "---------------Hapus Data Bioskop---------------\n";
-    int id = stoi(inputNumber("Masukan ID Bioskop : ", 0));
+    cout << BOLD CYAN "\n=============== Hapus Data Bioskop ===============\n" << RESET << endl;
+    int id = stoi(inputNumber("  Masukan ID Bioskop : ", 0));
 
     int i = 0;
     for(auto data: dataBioskop) {
         if(data.getId() == id) {
             dataBioskop.erase(dataBioskop.begin() + i);
+            cout << GREEN "\n  Data Bioskop berhasil dihapus!\n" << RESET << endl;
             return;
         }
         else i++;
     }
 
-    cout << "ID Bioskop tidak ditemukan\n";
+    cout << RED "\n  ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" << RESET << endl;
 }
 
 void searchData() {
-    int id = stoi(inputNumber("Masukan ID Bioskop : ", 0));
+    cout << BOLD CYAN "\n=============== Cari Data Bioskop ===============\n" << RESET << endl;
+    int id = stoi(inputNumber("  Masukan ID Bioskop : ", 0));
     for(auto data : dataBioskop) {
         if(data.getId() == id) {
+            cout << GREEN "  Data ditemukan!\n" << RESET << endl;
             separator();
             row("ID", "Nama Bioskop", "Alamat", "Total Studio", "Rating");
             separator();
@@ -232,18 +266,20 @@ void searchData() {
             rate << fixed << setprecision(2) << data.getRating();
             row(to_string(data.getId()), data.getName(), data.getAddress(), to_string(data.getTotalStudios()), rate.str());
             separator();
+            cout << endl;
             return;
         }
     }
-    cout << "data tidak ada\n";
+    cout << RED "\n  ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" << RESET << endl;
 }
 
 int main() {
     initCol();
     intro();
 
-    while(true) {
-        cout << "Pilih Opsi : " << endl;
+    int exit = 0;
+    while(!exit) {
+        cout << BOLD "  Pilih opsi [1-6] >> " << RESET;
         int option;
         cin >> option;
         cin.ignore();
@@ -264,8 +300,12 @@ int main() {
             case 5:
                 searchData();
                 break;
+            case 6:
+                cout << GREEN "\n  Sampai jumpa! Terima kasih telah menggunakan program ini.\n\n" << RESET;
+                exit = 1;
+                break;
             default:
-                cout << "pilih opsi yang sesuai" << endl;
+                cout << RED "\n  Opsi tidak valid, silakan pilih antara 1 sampai 6.\n" << RESET << endl;
         }
     }
 
