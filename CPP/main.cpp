@@ -2,7 +2,6 @@
 #include<string>
 #include<vector>
 #include<cmath>
-#include<cstring>
 #include<iomanip>
 #include "Bioskop.cpp"
 
@@ -11,11 +10,11 @@ vector<Bioskop> dataBioskop;
 int col[5];
 
 void initCol() {
-    col[0] = strlen("ID");
-    col[1] = strlen("Nama Bioskop");
-    col[2] = strlen("Alamat");
-    col[3] = strlen("Total Studio");
-    col[4] = strlen("Rating");
+    col[0] = string("ID").length();
+    col[1] = string("Nama Bioskop").length();
+    col[2] = string("Alamat").length();
+    col[3] = string("Total Studio").length();
+    col[4] = string("Rating").length();
 }
 
 void intro() {
@@ -186,6 +185,23 @@ void del() {
     cout << "ID Bioskop tidak ditemukan\n";
 }
 
+void searchData() {
+    int id = inputInteger("Masukan ID Bioskop : ", 0);
+    for(auto data : dataBioskop) {
+        if(data.getId() == id) {
+            separator();
+            row("ID", "Nama Bioskop", "Alamat", "Total Studio", "Rating");
+            separator();
+            stringstream rate;
+            rate << fixed << setprecision(2) << data.getRating();
+            row(to_string(data.getId()), data.getName(), data.getAddress(), to_string(data.getTotalStudios()), rate.str());
+            separator();
+            return;
+        }
+    }
+    cout << "data tidak ada\n";
+}
+
 int main() {
     initCol();
     intro();
@@ -209,6 +225,7 @@ int main() {
                 del();
                 break;
             case 5:
+                searchData();
                 break;
             default:
                 cout << "pilih opsi yang sesuai" << endl;
