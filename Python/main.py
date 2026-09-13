@@ -64,6 +64,13 @@ def insert():
     now = Bioskop(id, name, address, totalStudios, rating)
     dataBioskop.append(now)
 
+def show():
+    table_data = []
+    for data in dataBioskop:
+        table_data.append([data.getId(), data.getName(), data.getAddress(), data.getTotalStudios(), data.getRating()])
+    headers = ["ID", "Nama Bioskop", "Alamat", "Total Studio", "Rating"]
+    print(tabulate(table_data, headers=headers, tablefmt="grid"))
+
 def main():
     intro()
 
@@ -73,7 +80,7 @@ def main():
 
         match option:
             case 1: insert()
-            # case 2:
+            case 2: show()
 
             # case 3:
 
