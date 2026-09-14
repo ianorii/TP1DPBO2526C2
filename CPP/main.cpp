@@ -37,7 +37,8 @@ void intro() {
     cout << CYAN "  [3]" RESET " Update Data Film\n";
     cout << CYAN "  [4]" RESET " Hapus Data Film\n";
     cout << CYAN "  [5]" RESET " Cari Data Film\n";
-    cout << CYAN "  [6]" RESET " Keluar\n";
+    cout << CYAN "  [6]" RESET " Help\n";
+    cout << CYAN "  [7]" RESET " Keluar\n";
     cout << BOLD CYAN "+====================================================+\n" << RESET << endl;
 }
 
@@ -219,7 +220,7 @@ int main() {
 
     int exit = 0;
     while(!exit) { // loop utama program
-        cout << BOLD "  Pilih opsi [1-6] >> " << RESET;
+        cout << BOLD "  Pilih opsi [1-7] >> " << RESET;
         int option;
         cin >> option;
         cin.ignore(); // membersihkan buffer input
@@ -230,11 +231,12 @@ int main() {
             case 3: update(); break;
             case 4: del(); break;
             case 5: searchData(); break;
-            case 6:
+            case 6: intro(); break;
+            case 7:
                 cout << GREEN "\n  Sampai jumpa! Terima kasih telah menggunakan program ini.\n\n" << RESET;
                 exit = 1; break;
             default:
-                cout << RED "\n  Opsi tidak valid, silakan pilih antara 1 sampai 6.\n" << RESET << endl;
+                cout << RED "\n  Opsi tidak valid, silakan pilih antara 1 sampai 7.\n" << RESET << endl;
         }
     }
     return 0;
