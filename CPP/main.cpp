@@ -71,7 +71,7 @@ string inputNumber(string message, int type = 0, string defaultVal = "") {
         getline(cin, input);
         if(input.empty() && !defaultVal.empty()) return defaultVal;
         if(isNumber(input, type)) return input;
-        cout << RED "  Input harus berupa bilangan " << (type ? "desimal" : "bulat") << ".\n" RESET;
+        cout << RED "  [ERROR] Input harus berupa bilangan " << (type ? "desimal" : "bulat") << ".\n\n" RESET;
     }
 }
 
@@ -90,10 +90,16 @@ void updateCol(int id, string nama, int durasi) {
     len = (int)log10(durasi) + 1; if(col[2] < len) col[2] = len;
 }
 
-// mencetak garis pembatas tabel
+// mencetak garis pembatas tabel (+---+)
 void separator() {
-    for(int i = 0; i < 4; i++) { cout << "+-"; for(int j = 0; j < col[i]; j++) cout << "-"; }
-    cout << "-+" << endl;
+    for(int i = 0; i < 4; i++) { cout << "+"; for(int j = 0; j < col[i] + 2; j++) cout << "-"; }
+    cout << "+" << endl;
+}
+
+// mencetak garis header tabel (+===+)
+void headerSeparator() {
+    for(int i = 0; i < 4; i++) { cout << "+"; for(int j = 0; j < col[i] + 2; j++) cout << "-"; }
+    cout << "+" << endl;
 }
 
 // mencetak satu baris data dalam tabel
@@ -101,16 +107,16 @@ void row(string cols[]) {
     for(int i = 0; i < 4; i++) {
         cout << "| " << cols[i];
         for(int j = 0; j < col[i] - (int)cols[i].length(); j++) cout << " ";
+        cout << " ";
     }
-    cout << " |" << endl;
+    cout << "|" << endl;
 }
 
-// mencetak satu data film dalam tabel (garis + baris data)
+// mencetak satu data film dalam tabel
 void printTable(Film &data) {
     stringstream rate;
     rate << fixed << setprecision(2) << data.getRating();
     string r[4] = {to_string(data.getId()), data.getNama(), to_string(data.getDurasi()), rate.str()};
-    separator();
     row(r);
 }
 
@@ -123,7 +129,7 @@ void insert() {
     while(true) {
         id = stoi(inputNumber("  Masukan ID : "));
         if(findIndex(id) == -1) break;
-        cout << RED "  ID sudah terpakai, gunakan ID lain\n" RESET;
+        cout << RED "  [ERROR] ID sudah terpakai, gunakan ID lain\n\n" RESET;
     }
 
     // input data lainnya
@@ -134,7 +140,7 @@ void insert() {
     // update lebar kolom dan tambahkan data
     updateCol(id, nama, durasi);
     dataFilm.push_back(Film(id, nama, durasi, rating));
-    cout << GREEN "\n  Data Film berhasil ditambahkan!\n" << RESET << endl;
+    cout << GREEN "  [SUCSESS] Data Film berhasil ditambahkan!\n" << RESET << endl;
 }
 
 // menampilkan seluruh data film dalam bentuk tabel
@@ -144,6 +150,7 @@ void show() {
 
     separator();
     row(headers);
+    headerSeparator();
     for(auto &data : dataFilm) printTable(data);
     separator();
     cout << endl;
@@ -162,7 +169,7 @@ void update() {
         // input ID baru dengan validasi
         id = stoi(inputNumber("  Masukan ID baru [" + to_string(data.getId()) + "] : ", 0, to_string(data.getId())));
         while(id != data.getId() && findIndex(id) != -1) {
-            cout << RED "  ID sudah terpakai, gunakan ID lain\n" RESET;
+            cout << RED "  [ERROR] ID sudah terpakai, gunakan ID lain\n\n" RESET;
             id = stoi(inputNumber("  Masukan ID baru [" + to_string(data.getId()) + "] : ", 0, to_string(data.getId())));
         }
 
@@ -176,9 +183,9 @@ void update() {
         data.setNama(nama);
         data.setDurasi(durasi);
         data.setRating(rating);
-        cout << GREEN "\n  Data Film berhasil diupdate!\n" << RESET << endl;
+        cout << GREEN "  [SUCSESS] Data Film berhasil diupdate!\n" << RESET << endl;
     } else {
-        cout << RED "\n  ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" << RESET << endl;
+        cout << RED "  [ERROR] ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" << RESET << endl;
     }
 }
 
@@ -190,9 +197,9 @@ void del() {
 
     if(idx != -1) {
         dataFilm.erase(dataFilm.begin() + idx);
-        cout << GREEN "\n  Data Film berhasil dihapus!\n" << RESET << endl;
+        cout << GREEN "  [SUCSESS] Data Film berhasil dihapus!\n" << RESET << endl;
     } else {
-        cout << RED "\n  ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" << RESET << endl;
+        cout << RED "  [ERROR] ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" << RESET << endl;
     }
 }
 
@@ -203,13 +210,15 @@ void searchData() {
     int idx = findIndex(id);
 
     if(idx != -1) {
-        cout << GREEN "  Data ditemukan!\n" << RESET << endl;
-        separator(); row(headers); separator();
+        cout << GREEN "  [SUCSESS] Data ditemukan!\n" << RESET << endl;
+        separator();
+        row(headers);
+        headerSeparator();
         printTable(dataFilm[idx]);
         separator();
         cout << endl;
     } else {
-        cout << RED "\n  ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" << RESET << endl;
+        cout << RED "  [ERROR] ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" << RESET << endl;
     }
 }
 
@@ -236,7 +245,7 @@ int main() {
                 cout << GREEN "\n  Sampai jumpa! Terima kasih telah menggunakan program ini.\n\n" << RESET;
                 exit = 1; break;
             default:
-                cout << RED "\n  Opsi tidak valid, silakan pilih antara 1 sampai 7.\n" << RESET << endl;
+                cout << RED "\n  [ERROR] Opsi tidak valid, silakan pilih antara 1 sampai 7.\n" << RESET << endl;
         }
     }
     return 0;

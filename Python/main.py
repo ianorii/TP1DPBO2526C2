@@ -38,14 +38,14 @@ def inputNumber(message:str, is_float:bool=False):
         try:
             return float(input(message)) if is_float else int(input(message))
         except ValueError:
-            print(RED + "  Input harus berupa bilangan " + ("desimal" if is_float else "bulat") + "." + RESET)
+            print(RED + "  [ERROR] Input harus berupa bilangan " + ("desimal" if is_float else "bulat") + "." + RESET)
 
 def insert():
     print(BOLD + CYAN + "\n=============== Masukan Data Film ===============\n" + RESET)
 
     id = inputNumber("  Masukan ID : ")
     while searchId(id) != -1:
-        print(RED + "  ID sudah terpakai, gunakan ID lain" + RESET)
+        print(RED + "  [ERROR] ID sudah terpakai, gunakan ID lain" + RESET)
         id = inputNumber("  Masukan ID : ")
 
     nama = str(input("  Masukan Nama Film : "))
@@ -54,7 +54,7 @@ def insert():
 
     now = Film(id, nama, durasi, rating)
     dataFilm.append(now)
-    print(GREEN + "\n  Data Film berhasil ditambahkan!\n" + RESET)
+    print(GREEN + "\n  [SUCSESS] Data Film berhasil ditambahkan!\n" + RESET)
 
 def show():
     print(BOLD + CYAN + "\n=============== Data Film ===============\n" + RESET)
@@ -76,21 +76,21 @@ def updateNumber(message, currentVal, is_float=False):
         try:
             return float(ans) if is_float else int(ans)
         except ValueError:
-            print(RED + "  Input harus berupa bilangan " + ("desimal" if is_float else "bulat") + "." + RESET)
+            print(RED + "  [ERROR] Input harus berupa bilangan " + ("desimal" if is_float else "bulat") + "." + RESET)
 
 def update():
     print(BOLD + CYAN + "\n=============== Update Data Film ===============\n" + RESET)
     idInput = inputNumber("  Masukan ID : ")
     idx = searchId(idInput)
     if idx == -1:
-        print(RED + "\n  ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" + RESET)
+        print(RED + "\n  [ERROR] ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" + RESET)
         return
 
     while True:
         newId = updateNumber("  Masukan ID baru [" + str(dataFilm[idx].getId()) + "] : ", dataFilm[idx].getId())
         cek = searchId(newId)
         if cek != -1 and dataFilm[cek].getId() != dataFilm[idx].getId():
-            print(RED + "  ID sudah terpakai, gunakan ID lain" + RESET)
+            print(RED + "  [ERROR] ID sudah terpakai, gunakan ID lain" + RESET)
         else:
             dataFilm[idx].setId(newId)
             break
@@ -103,28 +103,28 @@ def update():
     dataFilm[idx].setNama(nama)
     dataFilm[idx].setDurasi(durasi)
     dataFilm[idx].setRating(rating)
-    print(GREEN + "\n  Data Film berhasil diupdate!\n" + RESET)
+    print(GREEN + "\n  [SUCSESS] Data Film berhasil diupdate!\n" + RESET)
 
 def delete():
     print(BOLD + CYAN + "\n=============== Hapus Data Film ===============\n" + RESET)
     idInput = inputNumber("  Masukan ID Film : ")
     idx = searchId(idInput)
     if idx == -1:
-        print(RED + "\n  ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" + RESET)
+        print(RED + "\n  [ERROR] ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" + RESET)
         return
 
     dataFilm.pop(idx)
-    print(GREEN + "\n  Data Film berhasil dihapus!\n" + RESET)
+    print(GREEN + "\n  [SUCSESS] Data Film berhasil dihapus!\n" + RESET)
 
 def search():
     print(BOLD + CYAN + "\n=============== Cari Data Film ===============\n" + RESET)
     idInput = inputNumber("  Masukan ID Film : ")
     idx = searchId(idInput)
     if idx == -1:
-        print(RED + "\n  ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" + RESET)
+        print(RED + "\n  [ERROR] ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" + RESET)
         return
 
-    print(GREEN + "  Data ditemukan!\n" + RESET)
+    print(GREEN + "  [SUCSESS] Data ditemukan!\n" + RESET)
     data = dataFilm[idx]
     table_data = [[data.getId(), data.getNama(), data.getDurasi(), data.getRating()]]
     headers = ["ID", "Nama Film", "Durasi (menit)", "Rating"]
@@ -149,7 +149,7 @@ def main():
                 print(GREEN + "\n  Sampai jumpa! Terima kasih telah menggunakan program ini.\n" + RESET)
                 exit = True
             case _:
-                print(RED + "\n  Opsi tidak valid, silakan pilih antara 1 sampai 7.\n" + RESET)
+                print(RED + "\n  [ERROR] Opsi tidak valid, silakan pilih antara 1 sampai 7.\n" + RESET)
 
 
 if __name__ == "__main__":
