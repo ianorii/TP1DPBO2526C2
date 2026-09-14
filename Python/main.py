@@ -22,7 +22,8 @@ def intro():
     print(CYAN + "  [3]" + RESET + " Update Data Film")
     print(CYAN + "  [4]" + RESET + " Hapus Data Film")
     print(CYAN + "  [5]" + RESET + " Cari Data Film")
-    print(CYAN + "  [6]" + RESET + " Keluar")
+    print(CYAN + "  [6]" + RESET + " Help")
+    print(CYAN + "  [7]" + RESET + " Keluar")
     print(BOLD + CYAN)
     print("+====================================================+")
     print(RESET)
@@ -37,27 +38,36 @@ def inputNumber(message:str, is_float:bool=False):
         try:
             return float(input(message)) if is_float else int(input(message))
         except ValueError:
-            print(f"Input harus bilangan {'desimal' if is_float else 'bulat'}")
+            print(RED + "  Input harus berupa bilangan " + ("desimal" if is_float else "bulat") + "." + RESET)
 
 def insert():
-    id = inputNumber("masukan ID : ")
-    if searchId(id) != -1:
-        print("data ID sudah ada")
-        return
+    print(BOLD + CYAN + "\n=============== Masukan Data Film ===============\n" + RESET)
 
-    nama = str(input("masukan nama film : "))
-    durasi = inputNumber("masukan durasi (menit) : ")
-    rating = inputNumber("masukan rating : ", True)
+    id = inputNumber("  Masukan ID : ")
+    while searchId(id) != -1:
+        print(RED + "  ID sudah terpakai, gunakan ID lain" + RESET)
+        id = inputNumber("  Masukan ID : ")
+
+    nama = str(input("  Masukan Nama Film : "))
+    durasi = inputNumber("  Masukan Durasi (menit) : ")
+    rating = inputNumber("  Masukan Rating Film : ", True)
 
     now = Film(id, nama, durasi, rating)
     dataFilm.append(now)
+    print(GREEN + "\n  Data Film berhasil ditambahkan!\n" + RESET)
 
 def show():
+    print(BOLD + CYAN + "\n=============== Data Film ===============\n" + RESET)
+    if not dataFilm:
+        print(YELLOW + "  Belum ada data yang tersimpan.\n" + RESET)
+        return
+
     table_data = []
     for data in dataFilm:
         table_data.append([data.getId(), data.getNama(), data.getDurasi(), data.getRating()])
     headers = ["ID", "Nama Film", "Durasi (menit)", "Rating"]
     print(tabulate(table_data, headers=headers, tablefmt="grid"))
+    print()
 
 def updateNumber(message, currentVal, is_float=False):
     while True:
@@ -66,59 +76,67 @@ def updateNumber(message, currentVal, is_float=False):
         try:
             return float(ans) if is_float else int(ans)
         except ValueError:
-            print(f"Input harus bilangan {'desimal' if is_float else 'bulat'}")
+            print(RED + "  Input harus berupa bilangan " + ("desimal" if is_float else "bulat") + "." + RESET)
 
 def update():
-    idInput = inputNumber("masukan ID : ")
+    print(BOLD + CYAN + "\n=============== Update Data Film ===============\n" + RESET)
+    idInput = inputNumber("  Masukan ID : ")
     idx = searchId(idInput)
     if idx == -1:
-        print("data ID tidak ada")
+        print(RED + "\n  ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" + RESET)
         return
 
     while True:
-        newId = updateNumber("Masukan ID baru : ", dataFilm[idx].getId())
+        newId = updateNumber("  Masukan ID baru [" + str(dataFilm[idx].getId()) + "] : ", dataFilm[idx].getId())
         cek = searchId(newId)
-        if cek != -1 and dataFilm[cek].getId() != dataFilm[idx].getId(): print("Data ID sudah ada")
+        if cek != -1 and dataFilm[cek].getId() != dataFilm[idx].getId():
+            print(RED + "  ID sudah terpakai, gunakan ID lain" + RESET)
         else:
             dataFilm[idx].setId(newId)
             break
 
-    nama = str(input("masukan nama film : "))
-    durasi = updateNumber("masukan durasi (menit) : ", dataFilm[idx].getDurasi())
-    rating = updateNumber("masukan rating : ", dataFilm[idx].getRating(), True)
+    nama = str(input("  Masukan Nama baru [" + dataFilm[idx].getNama() + "] : "))
+    if nama == "": nama = dataFilm[idx].getNama()
+    durasi = updateNumber("  Masukan Durasi baru [" + str(dataFilm[idx].getDurasi()) + "] menit : ", dataFilm[idx].getDurasi())
+    rating = updateNumber("  Masukan Rating Film [" + str(dataFilm[idx].getRating()) + "] : ", dataFilm[idx].getRating(), True)
 
     dataFilm[idx].setNama(nama)
     dataFilm[idx].setDurasi(durasi)
     dataFilm[idx].setRating(rating)
+    print(GREEN + "\n  Data Film berhasil diupdate!\n" + RESET)
 
 def delete():
-    idInput = inputNumber("masukan ID Film : ")
+    print(BOLD + CYAN + "\n=============== Hapus Data Film ===============\n" + RESET)
+    idInput = inputNumber("  Masukan ID Film : ")
     idx = searchId(idInput)
     if idx == -1:
-        print("data ID tidak ada")
+        print(RED + "\n  ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" + RESET)
         return
 
     dataFilm.pop(idx)
-    print("data berhasil dihapus")
+    print(GREEN + "\n  Data Film berhasil dihapus!\n" + RESET)
 
 def search():
-    idInput = inputNumber("masukan ID Film : ")
+    print(BOLD + CYAN + "\n=============== Cari Data Film ===============\n" + RESET)
+    idInput = inputNumber("  Masukan ID Film : ")
     idx = searchId(idInput)
     if idx == -1:
-        print("data ID tidak ada")
+        print(RED + "\n  ID tidak ditemukan, pastikan ID yang dimasukkan benar.\n" + RESET)
         return
 
+    print(GREEN + "  Data ditemukan!\n" + RESET)
     data = dataFilm[idx]
     table_data = [[data.getId(), data.getNama(), data.getDurasi(), data.getRating()]]
     headers = ["ID", "Nama Film", "Durasi (menit)", "Rating"]
     print(tabulate(table_data, headers=headers, tablefmt="grid"))
+    print()
 
 def main():
     intro()
 
     exit = False
     while not exit:
-        option = int(input(BOLD + "  Pilih opsi [1-6] >> " + RESET))
+        option = int(input(BOLD + "  Pilih opsi [1-7] >> " + RESET))
 
         match option:
             case 1: insert()
@@ -126,11 +144,12 @@ def main():
             case 3: update()
             case 4: delete()
             case 5: search()
-            case 6:
+            case 6: intro()
+            case 7:
                 print(GREEN + "\n  Sampai jumpa! Terima kasih telah menggunakan program ini.\n" + RESET)
                 exit = True
             case _:
-                print(RED + "\n  Opsi tidak valid, silakan pilih antara 1 sampai 6." + RESET)
+                print(RED + "\n  Opsi tidak valid, silakan pilih antara 1 sampai 7.\n" + RESET)
 
 
 if __name__ == "__main__":
