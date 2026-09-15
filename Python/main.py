@@ -1,15 +1,23 @@
+# Sistem Manajemen Data Film
+# Program ini merupakan program CRUD (Create, Read, Update, Delete)
+# untuk mengelola data film menggunakan Python dengan pendekatan OOP.
+# Menggunakan library tabulate untuk menampilkan data dalam format tabel.
+
 from Film import Film
 from tabulate import tabulate
 
-RESET ="\033[0m"
-RED ="\033[31m"
-GREEN ="\033[32m"
-CYAN ="\033[36m"
-YELLOW ="\033[33m"
-BOLD ="\033[1m"
+# Konstanta ANSI Escape Code untuk pewarnaan teks pada terminal
+RESET ="\033[0m"    # Reset warna ke default
+RED ="\033[31m"     # Warna merah untuk pesan error
+GREEN ="\033[32m"   # Warna hijau untuk pesan sukses
+CYAN ="\033[36m"    # Warna cyan untuk menu dan header
+YELLOW ="\033[33m"  # Warna kuning untuk peringatan
+BOLD ="\033[1m"     # Teks tebal/bold
 
+# List untuk menyimpan objek Film (in-memory database)
 dataFilm = []
 
+# Menampilkan menu utama dan header program
 def intro():
     print(BOLD + CYAN)
     print("+====================================================+")
@@ -28,11 +36,13 @@ def intro():
     print("+====================================================+")
     print(RESET)
 
+# Mencari indeks film berdasarkan ID. Mengembalikan indeks jika ditemukan, -1 jika tidak.
 def searchId(target:int):
     for i, data in enumerate(dataFilm):
         if data.getId() == target : return i
     return -1
 
+# Meminta input bilangan dari user dengan validasi input
 def inputNumber(message:str, is_float:bool=False):
     while True:
         try:
@@ -40,6 +50,7 @@ def inputNumber(message:str, is_float:bool=False):
         except ValueError:
             print(RED + "  [ERROR] Input harus berupa bilangan " + ("desimal" if is_float else "bulat") + "." + RESET)
 
+# Menu Insert - Menambahkan data film baru ke dalam list
 def insert():
     print(BOLD + CYAN + "\n=============== Masukan Data Film ===============\n" + RESET)
 
@@ -56,6 +67,7 @@ def insert():
     dataFilm.append(now)
     print(GREEN + "\n  [SUCSESS] Data Film berhasil ditambahkan!\n" + RESET)
 
+# Menu Show - Menampilkan semua data film dalam format tabel
 def show():
     print(BOLD + CYAN + "\n=============== Data Film ===============\n" + RESET)
     if not dataFilm:
@@ -69,6 +81,7 @@ def show():
     print(tabulate(table_data, headers=headers, tablefmt="grid"))
     print()
 
+# Meminta input untuk update data. Jika input kosong, mengembalikan nilai saat ini
 def updateNumber(message, currentVal, is_float=False):
     while True:
         ans = input(message)
@@ -78,6 +91,7 @@ def updateNumber(message, currentVal, is_float=False):
         except ValueError:
             print(RED + "  [ERROR] Input harus berupa bilangan " + ("desimal" if is_float else "bulat") + "." + RESET)
 
+# Menu Update - Memperbarui data film berdasarkan ID
 def update():
     print(BOLD + CYAN + "\n=============== Update Data Film ===============\n" + RESET)
     idInput = inputNumber("  Masukan ID : ")
@@ -105,6 +119,7 @@ def update():
     dataFilm[idx].setRating(rating)
     print(GREEN + "\n  [SUCSESS] Data Film berhasil diupdate!\n" + RESET)
 
+# Menu Delete - Menghapus data film berdasarkan ID
 def delete():
     print(BOLD + CYAN + "\n=============== Hapus Data Film ===============\n" + RESET)
     idInput = inputNumber("  Masukan ID Film : ")
@@ -116,6 +131,7 @@ def delete():
     dataFilm.pop(idx)
     print(GREEN + "\n  [SUCSESS] Data Film berhasil dihapus!\n" + RESET)
 
+# Menu Search - Mencari dan menampilkan data film berdasarkan ID
 def search():
     print(BOLD + CYAN + "\n=============== Cari Data Film ===============\n" + RESET)
     idInput = inputNumber("  Masukan ID Film : ")
@@ -131,6 +147,7 @@ def search():
     print(tabulate(table_data, headers=headers, tablefmt="grid"))
     print()
 
+# Fungsi utama - Menampilkan menu dan memproses pilihan user
 def main():
     intro()
 
