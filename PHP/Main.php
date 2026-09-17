@@ -246,29 +246,53 @@ if ($editId != '') {
             gap: 10px;
             margin-top: 15px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .film-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
             margin-top: 15px;
         }
-        table th, table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+        .film-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        table th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-weight: 600;
+        .film-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
-        table tr:hover {
-            background: #f5f5f5;
-        }
-        table img {
-            width: 80px;
-            height: 80px;
+        .film-card-img {
+            width: 100%;
+            height: 350px;
             object-fit: cover;
-            border-radius: 8px;
+        }
+        .film-card-no-img {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2em;
+        }
+        .film-card-body {
+            padding: 15px;
+        }
+        .film-card-body h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .film-card-body p {
+            color: #666;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        .film-card-body strong {
+            color: #667eea;
         }
         .message {
             padding: 15px;
@@ -464,45 +488,31 @@ if ($editId != '') {
                     <p>Silakan tambahkan data film baru di form atas</p>
                 </div>
             <?php else: ?>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Gambar</th>
-                            <th>Nama Film</th>
-                            <th>Durasi</th>
-                            <th>Rating</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($_SESSION['dataFilm'] as $film): ?>
-                            <tr>
-                                <td><?= $film->getId() ?></td>
-                                <td>
-                                    <?php if ($film->getGambar() != ''): ?>
-                                        <img src="<?= $film->getGambar() ?>" alt="<?= $film->getNama() ?>">
-                                    <?php else: ?>
-                                        <span>Tidak ada gambar</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td><?= $film->getNama() ?></td>
-                                <td><?= $film->getDurasi() ?> menit</td>
-                                <td><?= number_format($film->getRating(), 2) ?></td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a href="Main.php?edit_id=<?= $film->getId() ?>" class="btn btn-warning">Edit</a>
-                                        <form method="POST" style="display:inline;">
-                                            <input type="hidden" name="action" value="delete">
-                                            <input type="hidden" name="id" value="<?= $film->getId() ?>">
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                <div class="film-grid">
+                    <?php foreach ($_SESSION['dataFilm'] as $film): ?>
+                        <div class="film-card">
+                            <?php if ($film->getGambar() != ''): ?>
+                                <img src="<?= $film->getGambar() ?>" alt="<?= $film->getNama() ?>" class="film-card-img">
+                            <?php else: ?>
+                                <div class="film-card-no-img">Tidak ada gambar</div>
+                            <?php endif; ?>
+                            <div class="film-card-body">
+                                <h3><?= $film->getNama() ?></h3>
+                                <p><strong>ID:</strong> <?= $film->getId() ?></p>
+                                <p><strong>Durasi:</strong> <?= $film->getDurasi() ?> menit</p>
+                                <p><strong>Rating:</strong> <?= number_format($film->getRating(), 2) ?></p>
+                                <div class="btn-group">
+                                    <a href="Main.php?edit_id=<?= $film->getId() ?>" class="btn btn-warning">Edit</a>
+                                    <form method="POST" style="display:inline;">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="id" value="<?= $film->getId() ?>">
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             <?php endif; ?>
         </div>
     </div>
