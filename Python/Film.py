@@ -1,6 +1,7 @@
 class Film:
     # constructor
     def __init__(self, id:int, nama:str, durasi:int, rating:float):
+        # private atribut
         self.__id = id
         self.__nama = nama
         self.__durasi = durasi

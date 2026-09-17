@@ -1,8 +1,3 @@
-# Sistem Manajemen Data Film
-# Program ini merupakan program CRUD (Create, Read, Update, Delete)
-# untuk mengelola data film menggunakan Python dengan pendekatan OOP.
-# Menggunakan library tabulate untuk menampilkan data dalam format tabel.
-
 from Film import Film
 from tabulate import tabulate
 
