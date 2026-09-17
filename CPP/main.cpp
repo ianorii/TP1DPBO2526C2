@@ -75,6 +75,23 @@ string inputNumber(string message, int type = 0, string defaultVal = "") {
     }
 }
 
+// menerima input rating dari user dengan validasi range 1-10
+string inputRating(string message, string defaultVal = "") {
+    string input;
+    while(true) {
+        cout << message;
+        getline(cin, input);
+        if(input.empty() && !defaultVal.empty()) return defaultVal;
+        if(isNumber(input, true)) {
+            float val = stof(input);
+            if(val >= 1.0 && val <= 10.0) return input;
+            cout << RED "  [ERROR] Rating harus di range 1-10.\n\n" RESET;
+        } else {
+            cout << RED "  [ERROR] Input harus berupa bilangan desimal.\n\n" RESET;
+        }
+    }
+}
+
 // menerima input teks dari user, defaultVal jika input kosong
 string inputString(string message, string defaultVal = "") {
     string ans;
@@ -135,7 +152,7 @@ void insert() {
     // input data lainnya
     string nama = inputString("  Masukan Nama Film : ");
     int durasi = stoi(inputNumber("  Masukan Durasi (menit) : "));
-    float rating = stof(inputNumber("  Masukan Rating Film : ", 1));
+    float rating = stof(inputRating("  Masukan Rating Film [1-10] : "));
 
     // update lebar kolom dan tambahkan data
     updateCol(id, nama, durasi);
@@ -176,7 +193,7 @@ void update() {
         // input field lainnya (tekan enter = nilai lama)
         string nama = inputString("  Masukan Nama baru [" + data.getNama() + "] : ", data.getNama());
         int durasi = stoi(inputNumber("  Masukan Durasi baru [" + to_string(data.getDurasi()) + "] menit : ", 0, to_string(data.getDurasi())));
-        float rating = stof(inputNumber("  Masukan Rating Film [" + to_string(data.getRating()) + "] : ", 1, to_string(data.getRating())));
+        float rating = stof(inputRating("  Masukan Rating Film [1-10] [" + to_string(data.getRating()) + "] : ", to_string(data.getRating())));
 
         // update object
         data.setId(id);

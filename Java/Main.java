@@ -90,6 +90,23 @@ public class Main {
         return (ans.isEmpty() && defaultVal != null) ? defaultVal : ans;
     }
 
+    // Menerima input rating dari user dengan validasi range 1-10
+    public static String inputRating(String message, String defaultVal) {
+        String input;
+        while (true) {
+            System.out.print(message);
+            input = scanner.nextLine();
+            if (input.isEmpty() && defaultVal != null && !defaultVal.isEmpty()) return defaultVal;
+            if (isNumber(input, true)) {
+                float val = Float.parseFloat(input);
+                if (val >= 1.0f && val <= 10.0f) return input;
+                System.out.println(RED + "  [ERROR] Rating harus di range 1-10.\n" + RESET);
+            } else {
+                System.out.println(RED + "  [ERROR] Input harus berupa bilangan desimal.\n" + RESET);
+            }
+        }
+    }
+
     // Memperbarui lebar kolom tabel berdasarkan data terbaru
     public static void updateCol(int id, String nama, int durasi) {
         int len = String.valueOf(id).length();
@@ -149,7 +166,7 @@ public class Main {
         // Input data lainnya
         String nama = inputString("  Masukan Nama Film : ", "");
         int durasi = Integer.parseInt(inputNumber("  Masukan Durasi (menit) : ", 0, ""));
-        float rating = Float.parseFloat(inputNumber("  Masukan Rating Film : ", 1, ""));
+        float rating = Float.parseFloat(inputRating("  Masukan Rating Film [1-10] : ", ""));
 
         // Update lebar kolom dan tambahkan data
         updateCol(id, nama, durasi);
@@ -193,7 +210,7 @@ public class Main {
             // Input field lainnya (tekan enter = nilai lama)
             String nama = inputString("  Masukan Nama baru [" + data.getNama() + "] : ", data.getNama());
             int durasi = Integer.parseInt(inputNumber("  Masukan Durasi baru [" + data.getDurasi() + "] menit : ", 0, String.valueOf(data.getDurasi())));
-            float rating = Float.parseFloat(inputNumber("  Masukan Rating Film [" + data.getRating() + "] : ", 1, String.valueOf(data.getRating())));
+            float rating = Float.parseFloat(inputRating("  Masukan Rating Film [1-10] [" + data.getRating() + "] : ", String.valueOf(data.getRating())));
 
             // Update object
             data.setId(id);

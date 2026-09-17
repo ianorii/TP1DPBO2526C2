@@ -48,7 +48,7 @@ TP1DPBO2526C2/
 | `id` | int | ID unik film |
 | `nama` | string | Nama film |
 | `durasi` | int | Durasi film (menit) |
-| `rating` | float | Rating film (0-10) |
+| `rating` | float | Rating film (1-10) |
 | `gambar` | string | Path file gambar poster |
 
 ---
@@ -73,8 +73,9 @@ TP1DPBO2526C2/
 - **Penanganan**: Cek return value `move_uploaded_file()`
 
 ### 5. Rating Diluar Range
-- **Kondisi**: Rating diisi selain 0-10
-- **Penanganan**: atribut `min="0"` `max="10"` pada HTML input
+- **Kondisi**: Rating diisi di luar range 1-10
+- **Penanganan**: Validasi di semua bahasa (C++, Java, Python, PHP)
+- **Pesan**: `"Rating harus di range 1-10!"`
 
 ### 6. SQL Injection
 - **Kondisi**: Input mengandung karakter berbahaya
@@ -134,7 +135,7 @@ python main.py
 |-------|------|------------|
 | Nama Film | text | Wajib diisi |
 | Durasi | number | Wajib diisi (menit) |
-| Rating | number | 0 - 10, desimal |
+| Rating | number | 1 - 10, desimal |
 | Gambar Poster | file | jpg, jpeg, png, gif, webp |
 
 ### Upload Gambar

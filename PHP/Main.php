@@ -61,15 +61,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $rating = (float)($_POST['rating'] ?? 0);
         $gambar = "";
 
-        // Upload gambar jika ada
-        if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] == 0) {
-            $gambar = uploadGambar($_FILES['gambar']);
-        }
+        // Validasi rating 1-10
+        if ($rating < 1 || $rating > 10) {
+            $message = "Rating harus di range 1-10!";
+            $messageType = "error";
+        } else {
+            // Upload gambar jika ada
+            if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] == 0) {
+                $gambar = uploadGambar($_FILES['gambar']);
+            }
 
-        $film = new Film($id, $nama, $durasi, $rating, $gambar);
-        $_SESSION['dataFilm'][] = $film;
-        $message = "Data Film berhasil ditambahkan!";
-        $messageType = "success";
+            $film = new Film($id, $nama, $durasi, $rating, $gambar);
+            $_SESSION['dataFilm'][] = $film;
+            $message = "Data Film berhasil ditambahkan!";
+            $messageType = "success";
+        }
     }
 
     // UPDATE
@@ -79,21 +85,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($idx != -1) {
             $film = $_SESSION['dataFilm'][$idx];
-            $film->setNama(htmlspecialchars($_POST['nama'] ?? $film->getNama()));
-            $film->setDurasi((int)($_POST['durasi'] ?? $film->getDurasi()));
-            $film->setRating((float)($_POST['rating'] ?? $film->getRating()));
+            $newRating = (float)($_POST['rating'] ?? $film->getRating());
 
-            // Upload gambar baru jika ada
-            if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] == 0) {
-                $gambar = uploadGambar($_FILES['gambar']);
-                if ($gambar != "") {
-                    $film->setGambar($gambar);
+            // Validasi rating 1-10
+            if ($newRating < 1 || $newRating > 10) {
+                $message = "Rating harus di range 1-10!";
+                $messageType = "error";
+            } else {
+                $film->setNama(htmlspecialchars($_POST['nama'] ?? $film->getNama()));
+                $film->setDurasi((int)($_POST['durasi'] ?? $film->getDurasi()));
+                $film->setRating($newRating);
+
+                // Upload gambar baru jika ada
+                if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] == 0) {
+                    $gambar = uploadGambar($_FILES['gambar']);
+                    if ($gambar != "") {
+                        $film->setGambar($gambar);
+                    }
                 }
-            }
 
-            $_SESSION['dataFilm'][$idx] = $film;
-            $message = "Data Film berhasil diupdate!";
-            $messageType = "success";
+                $_SESSION['dataFilm'][$idx] = $film;
+                $message = "Data Film berhasil diupdate!";
+                $messageType = "success";
+            }
         } else {
             $message = "ID tidak ditemukan!";
             $messageType = "error";
@@ -415,8 +429,8 @@ if ($editId != '') {
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Rating (0-10)</label>
-                        <input type="number" name="rating" step="0.01" min="0" max="10" value="<?= $editFilm ? $editFilm->getRating() : '' ?>" required>
+                        <label>Rating (1-10)</label>
+                        <input type="number" name="rating" step="0.01" min="1" max="10" value="<?= $editFilm ? $editFilm->getRating() : '' ?>" required>
                     </div>
                     <div class="form-group">
                         <label>Gambar Poster</label>

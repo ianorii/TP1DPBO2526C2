@@ -45,6 +45,17 @@ def inputNumber(message:str, is_float:bool=False):
         except ValueError:
             print(RED + "  [ERROR] Input harus berupa bilangan " + ("desimal" if is_float else "bulat") + "." + RESET)
 
+# Meminta input rating dari user dengan validasi range 1-10
+def inputRating(message:str):
+    while True:
+        try:
+            val = float(input(message))
+            if 1.0 <= val <= 10.0:
+                return val
+            print(RED + "  [ERROR] Rating harus di range 1-10." + RESET)
+        except ValueError:
+            print(RED + "  [ERROR] Input harus berupa bilangan desimal." + RESET)
+
 # Menu Insert - Menambahkan data film baru ke dalam list
 def insert():
     print(BOLD + CYAN + "\n=============== Masukan Data Film ===============\n" + RESET)
@@ -56,7 +67,7 @@ def insert():
 
     nama = str(input("  Masukan Nama Film : "))
     durasi = inputNumber("  Masukan Durasi (menit) : ")
-    rating = inputNumber("  Masukan Rating Film : ", True)
+    rating = inputRating("  Masukan Rating Film [1-10] : ")
 
     now = Film(id, nama, durasi, rating)
     dataFilm.append(now)
@@ -86,6 +97,19 @@ def updateNumber(message, currentVal, is_float=False):
         except ValueError:
             print(RED + "  [ERROR] Input harus berupa bilangan " + ("desimal" if is_float else "bulat") + "." + RESET)
 
+# Meminta input rating untuk update dengan validasi range 1-10
+def updateRating(message, currentVal):
+    while True:
+        ans = input(message)
+        if ans == "": return currentVal
+        try:
+            val = float(ans)
+            if 1.0 <= val <= 10.0:
+                return val
+            print(RED + "  [ERROR] Rating harus di range 1-10." + RESET)
+        except ValueError:
+            print(RED + "  [ERROR] Input harus berupa bilangan desimal." + RESET)
+
 # Menu Update - Memperbarui data film berdasarkan ID
 def update():
     print(BOLD + CYAN + "\n=============== Update Data Film ===============\n" + RESET)
@@ -107,7 +131,7 @@ def update():
     nama = str(input("  Masukan Nama baru [" + dataFilm[idx].getNama() + "] : "))
     if nama == "": nama = dataFilm[idx].getNama()
     durasi = updateNumber("  Masukan Durasi baru [" + str(dataFilm[idx].getDurasi()) + "] menit : ", dataFilm[idx].getDurasi())
-    rating = updateNumber("  Masukan Rating Film [" + str(dataFilm[idx].getRating()) + "] : ", dataFilm[idx].getRating(), True)
+    rating = updateRating("  Masukan Rating Film [1-10] [" + str(dataFilm[idx].getRating()) + "] : ", dataFilm[idx].getRating())
 
     dataFilm[idx].setNama(nama)
     dataFilm[idx].setDurasi(durasi)
