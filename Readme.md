@@ -139,11 +139,28 @@ Jika ada atribut yang tidak diperbarui makan tekan enter agar otomatis mengambil
 
 ---
 
-### Python
+## Dokumentasi Python
+### Compile dan Run
 ```bash
 # Run
 python Main.py
 ```
+
+### Menambahkan Data
+<img src="./Dokumentasi/python/insert.png" alt="inset" width=600>
+
+### Menampilkan Data
+<img src="./Dokumentasi/python/show.png" alt="show" width=600>
+
+### Memperbarui Data
+Jika ada atribut yang tidak diperbarui makan tekan enter agar otomatis mengambil default value<br>
+<img src="./Dokumentasi/python/update.png" alt="update" width=600>
+
+### Menghapus Data
+<img src="./Dokumentasi/python/delete.png" alt="delete" width=600>
+
+### Mencari Data
+<img src="./Dokumentasi/python/search.png" alt="search" width=600>
 
 ---
 
