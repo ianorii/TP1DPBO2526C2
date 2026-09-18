@@ -53,33 +53,25 @@ TP1DPBO2526C2/
 
 ---
 
-## Error Handling di Semua Program
+## Error Handling Program CLI
 
-### 1. Input Kosong
-- **Kondisi**: User tidak mengisi field yang wajib
-- **Penanganan**: atribut `required` pada HTML form
+### 1. Input Bukan Angka
+<img src="./Dokumentasi/error/img1.png" width=600>
 
-### 2. ID Tidak Ditemukan
-- **Kondisi**: User mencoba edit/hapus dengan ID yang tidak ada
-- **Pesan**: `"ID tidak ditemukan!"`
+### 2. Rating Bukan Desimal
+<img src="./Dokumentasi/error/img2.png" width=600>
 
-### 3. File Bukan Gambar
-- **Kondisi**: User upload file selain gambar
-- **Penanganan**: Validasi ekstensi file (jpg, jpeg, png, gif, webp)
-- **Pesan**: Tidak ada notifikasi, file tidak diupload
+### 3. Rating Diluar Range
+<img src="./Dokumentasi/error/img3.png" width=600>
 
-### 4. Upload Gagal
-- **Kondisi**: Error saat memindahkan file ke server
-- **Penanganan**: Cek return value `move_uploaded_file()`
+### 4. ID Sudah Terpakai
+<img src="./Dokumentasi/error/img4.png" width=600>
 
-### 5. Rating Diluar Range
-- **Kondisi**: Rating diisi di luar range 1-10
-- **Penanganan**: Validasi di semua bahasa (C++, Java, Python, PHP)
-- **Pesan**: `"Rating harus di range 1-10!"`
+### 5. ID Tidak Ditemukan
+<img src="./Dokumentasi/error/img5.png" width=600>
 
-### 6. SQL Injection
-- **Kondisi**: Input mengandung karakter berbahaya
-- **Penanganan**: Menggunakan `htmlspecialchars()` untuk sanitasi input
+### 6. Opsi Menu Tidak Valid
+<img src="./Dokumentasi/error/img6.png" width=600>
 
 ---
 
