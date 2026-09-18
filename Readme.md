@@ -53,7 +53,7 @@ TP1DPBO2526C2/
 
 ---
 
-## Error Handling
+## Error Handling di Semua Program
 
 ### 1. Input Kosong
 - **Kondisi**: User tidak mengisi field yang wajib
@@ -83,30 +83,49 @@ TP1DPBO2526C2/
 
 ---
 
-## Dokumentasi CLI
-
+## Dokumentasi C++
 ### C++
 ```bash
 # Compile
-g++ -o film main.cpp Film.cpp
+cd CPP/
+g++ Main.cpp -o Main
 
 # Run
-./film
+./Main
 ```
-
-### Java
+---
+## Dokumenatasi Java
+### Compile dan Run
 ```bash
 # Compile
-javac Main.java Film.java
+cd Java/
+javac Main.java
 
 # Run
 java Main
 ```
+### Menambahkan Data
+<img src="./Dokumentasi/java/insert.png" alt="inset" width=600>
+
+### Menampilkan Data
+<img src="./Dokumentasi/java/show.png" alt="show" width=600>
+
+### Memperbarui Data
+Jika ada atribut yang tidak diperbarui makan tekan enter agar otomatis mengambil default value<br>
+<img src="./Dokumentasi/java/update.png" alt="update" width=600>
+
+### Menghapus Data
+<img src="./Dokumentasi/java/delete.png" alt="delete" width=600>
+
+### Mencari Data
+<img src="./Dokumentasi/java/search.png" alt="search" width=600>
+
+---
 
 ### Python
 ```bash
 # Run
-python main.py
+python Main.py
 ```
 
 ---
