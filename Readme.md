@@ -84,7 +84,7 @@ TP1DPBO2526C2/
 ---
 
 ## Dokumentasi C++
-### C++
+### Compile dan Run
 ```bash
 # Compile
 cd CPP/
@@ -93,7 +93,24 @@ g++ Main.cpp -o Main
 # Run
 ./Main
 ```
+### Menambahkan Data
+<img src="./Dokumentasi/cpp/insert.png" alt="inset" width=600>
+
+### Menampilkan Data
+<img src="./Dokumentasi/cpp/show.png" alt="show" width=600>
+
+### Memperbarui Data
+Jika ada atribut yang tidak diperbarui makan tekan enter agar otomatis mengambil default value<br>
+<img src="./Dokumentasi/cpp/update.png" alt="update" width=600>
+
+### Menghapus Data
+<img src="./Dokumentasi/cpp/delete.png" alt="delete" width=600>
+
+### Mencari Data
+<img src="./Dokumentasi/cpp/search.png" alt="search" width=600>
+
 ---
+
 ## Dokumenatasi Java
 ### Compile dan Run
 ```bash
