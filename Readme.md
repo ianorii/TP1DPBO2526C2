@@ -1,4 +1,7 @@
-# TP1 DPBO 2025/2026 C2 - Sistem Manajemen Data Film
+# TP1 DPBO 2025/2026 C2
+
+## Janji
+Saya Muhammad Rian Anugrah dengan NIM 2507241 mengerjakan Tugas Praktikum 1 pada Mata Kuliah Desain dan Pemrograman Berorientasi Objek (DPBO) untuk keberkahan-Nya maka saya tidak melakukan kecurangan seperti yang telah dispesifikasikan. Aamiin
 
 ## Struktur Folder
 
@@ -135,6 +138,7 @@ Jika ada atribut yang tidak diperbarui makan tekan enter agar otomatis mengambil
 ### Compile dan Run
 ```bash
 # Run
+cd Python/
 python Main.py
 ```
 
@@ -160,38 +164,37 @@ Jika ada atribut yang tidak diperbarui makan tekan enter agar otomatis mengambil
 
 ### Cara Menjalankan
 
-1. Pastikan PHP sudah terinstall
-2. Buka terminal di folder `PHP/`
+1. Buka folder 'PHP/'
+    ```bash
+    cd PHP/
+    ```
 3. Jalankan perintah:
    ```bash
    php -S localhost:8000
    ```
-4. Buka browser dan akses `http://localhost:8000/Main.php`
+3. Buka browser dan akses `http://localhost:8000/Main.php`
 
-### Halaman Web
+### Tampilan Website
+<img src="./Dokumentasi/php/img1.png" width=800>
 
-| Halaman | URL | Deskripsi |
-|---------|-----|-----------|
-| Main | `/Main.php` | Halaman utama untuk kelola data film |
+### Menambahkan Data
+<img src="./Dokumentasi/php/insert.png" width=600><br>
+<img src="./Dokumentasi/php/hasilinsert.png" width=600>
 
-### Form Tambah/Edit
+### Memperbarui Data
+<img src="./Dokumentasi/php/update.png" width=600><br>
+<img src="./Dokumentasi/php/hasilupdate.png" width=600>
 
-| Field | Tipe | Keterangan |
-|-------|------|------------|
-| Nama Film | text | Wajib diisi |
-| Durasi | number | Wajib diisi (menit) |
-| Rating | number | 1 - 10, desimal |
-| Gambar Poster | file | jpg, jpeg, png, gif, webp |
+### Menghapus Data
+<img src="./Dokumentasi/php/delete.png" width=600><br>
+<img src="./Dokumentasi/php/hasildelete.png" width=600>
 
-### Upload Gambar
-- Gambar disimpan di folder `image/`
-- Nama file menggunakan nama asli dari file yang diupload
-- Jika nama sudah ada, akan menimpa file sebelumnya
+### Mencari Data
+<img src="./Dokumentasi/php/search.png" width=600><br>
 
----
-
-## Referensi
-
-- [PHP Documentation](https://www.php.net/docs/)
-- [HTML Documentation](https://developer.mozilla.org/en-US/docs/Web/HTML)
-- [CSS Documentation](https://developer.mozilla.org/en-US/docs/Web/CSS)
+### Error Handling
+<img src="./Dokumentasi/php/error1.png" width= 600><br>
+<img src="./Dokumentasi/php/error2.png" width= 600><br>
+<img src="./Dokumentasi/php/error3.png" width= 600><br>
+<img src="./Dokumentasi/php/error4.png" width= 600><br>
+<img src="./Dokumentasi/php/error5.png" width= 600><br>
