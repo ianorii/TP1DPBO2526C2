@@ -193,8 +193,8 @@ Jika ada atribut yang tidak diperbarui makan tekan enter agar otomatis mengambil
 <img src="./Dokumentasi/php/search.png" width=600><br>
 
 ### Error Handling
-<img src="./Dokumentasi/php/error1.png" width= 500><br>
-<img src="./Dokumentasi/php/error2.png" width= 500>
-<img src="./Dokumentasi/php/error3.png" width= 500><br>
-<img src="./Dokumentasi/php/error4.png" width= 500>
-<img src="./Dokumentasi/php/error5.png" width= 500><br>
+<img src="./Dokumentasi/php/error1.png" width= 700><br>
+<img src="./Dokumentasi/php/error2.png" width= 700><br>
+<img src="./Dokumentasi/php/error3.png" width= 700><br>
+<img src="./Dokumentasi/php/error4.png" width= 700><br>
+<img src="./Dokumentasi/php/error5.png" width= 700><br>

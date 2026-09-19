@@ -2,7 +2,7 @@
 require 'Film.php';
 session_start();
 
-// Inisialisasi data film dari session atau array kosong
+// Inisialisasi data film jika belum ada
 if (!isset($_SESSION['dataFilm'])) {
     $_SESSION['dataFilm'] = [];
 }
@@ -46,26 +46,58 @@ function uploadGambar(array $file): string {
     return "";
 }
 
-// Proses form submission
-$message = "";
-$messageType = "";
+// Ambil pesan flash dari session (hasil POST sebelumnya)
+$message = $_SESSION['flash_message'] ?? "";
+$messageType = $_SESSION['flash_message_type'] ?? "";
+unset($_SESSION['flash_message'], $_SESSION['flash_message_type']);
 
+// Proses form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $action = $_POST['action'] ?? '';
 
     // INSERT
     if ($action == 'insert') {
-        $id = getNewId($_SESSION['dataFilm']);
+        $id = $_POST['id'] ?? '';
         $nama = htmlspecialchars($_POST['nama'] ?? '');
-        $durasi = (int)($_POST['durasi'] ?? 0);
-        $rating = (float)($_POST['rating'] ?? 0);
+        $durasi = $_POST['durasi'] ?? '';
+        $rating = $_POST['rating'] ?? '';
         $gambar = "";
 
-        // Validasi rating 1-10
-        if ($rating < 1 || $rating > 10) {
-            $message = "Rating harus di range 1-10!";
-            $messageType = "error";
-        } else {
+        // Validasi ID kosong
+        if ($id == '') {
+            $_SESSION['flash_message'] = "ID film tidak boleh kosong!";
+            $_SESSION['flash_message_type'] = "error";
+        }
+        // Validasi ID harus angka
+        else if (!ctype_digit((string)$id) || (int)$id <= 0) {
+            $_SESSION['flash_message'] = "ID film harus berupa angka bulat positif!";
+            $_SESSION['flash_message_type'] = "error";
+        }
+        // Validasi ID sudah ada
+        else if (findIndex($_SESSION['dataFilm'], (int)$id) != -1) {
+            $_SESSION['flash_message'] = "ID film sudah digunakan!";
+            $_SESSION['flash_message_type'] = "error";
+        }
+        // Validasi nama kosong
+        else if ($nama == '') {
+            $_SESSION['flash_message'] = "Nama film tidak boleh kosong!";
+            $_SESSION['flash_message_type'] = "error";
+        }
+        // Validasi durasi harus angka bulat positif
+        else if ($durasi == '' || !ctype_digit((string)$durasi) || (int)$durasi <= 0) {
+            $_SESSION['flash_message'] = "Durasi harus berupa angka bulat positif!";
+            $_SESSION['flash_message_type'] = "error";
+        }
+        // Validasi rating harus desimal 1-10
+        else if ($rating == '' || !is_numeric($rating) || (float)$rating < 1 || (float)$rating > 10) {
+            $_SESSION['flash_message'] = "Rating harus berupa bilangan desimal di rentang 1-10!";
+            $_SESSION['flash_message_type'] = "error";
+        }
+        else {
+            $id = (int)$id;
+            $durasi = (int)$durasi;
+            $rating = (float)$rating;
+
             // Upload gambar jika ada
             if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] == 0) {
                 $gambar = uploadGambar($_FILES['gambar']);
@@ -73,9 +105,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $film = new Film($id, $nama, $durasi, $rating, $gambar);
             $_SESSION['dataFilm'][] = $film;
-            $message = "Data Film berhasil ditambahkan!";
-            $messageType = "success";
+            $_SESSION['flash_message'] = "Data Film berhasil ditambahkan!";
+            $_SESSION['flash_message_type'] = "success";
         }
+        header("Location: Main.php");
+        exit;
     }
 
     // UPDATE
@@ -85,16 +119,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($idx != -1) {
             $film = $_SESSION['dataFilm'][$idx];
-            $newRating = (float)($_POST['rating'] ?? $film->getRating());
+            $nama = htmlspecialchars($_POST['nama'] ?? $film->getNama());
+            $durasi = $_POST['durasi'] ?? $film->getDurasi();
+            $rating = $_POST['rating'] ?? $film->getRating();
 
-            // Validasi rating 1-10
-            if ($newRating < 1 || $newRating > 10) {
-                $message = "Rating harus di range 1-10!";
-                $messageType = "error";
-            } else {
-                $film->setNama(htmlspecialchars($_POST['nama'] ?? $film->getNama()));
-                $film->setDurasi((int)($_POST['durasi'] ?? $film->getDurasi()));
-                $film->setRating($newRating);
+            // Validasi nama kosong
+            if ($nama == '') {
+                $_SESSION['flash_message'] = "Nama film tidak boleh kosong!";
+                $_SESSION['flash_message_type'] = "error";
+            }
+            // Validasi durasi harus angka bulat positif
+            else if ($durasi == '' || !ctype_digit((string)$durasi) || (int)$durasi <= 0) {
+                $_SESSION['flash_message'] = "Durasi harus berupa angka bulat positif!";
+                $_SESSION['flash_message_type'] = "error";
+            }
+            // Validasi rating harus desimal 1-10
+            else if (!is_numeric($rating) || (float)$rating < 1 || (float)$rating > 10) {
+                $_SESSION['flash_message'] = "Rating harus berupa bilangan desimal di rentang 1-10!";
+                $_SESSION['flash_message_type'] = "error";
+            }
+            else {
+                $film->setNama($nama);
+                $film->setDurasi((int)$durasi);
+                $film->setRating((float)$rating);
 
                 // Upload gambar baru jika ada
                 if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] == 0) {
@@ -102,16 +149,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if ($gambar != "") {
                         $film->setGambar($gambar);
                     }
+                } else {
+                    // Pertahankan gambar lama
+                    $gambarLama = $_POST['gambar_lama'] ?? $film->getGambar();
+                    $film->setGambar($gambarLama);
                 }
 
                 $_SESSION['dataFilm'][$idx] = $film;
-                $message = "Data Film berhasil diupdate!";
-                $messageType = "success";
+                $_SESSION['flash_message'] = "Data Film berhasil diperbarui!";
+                $_SESSION['flash_message_type'] = "success";
             }
         } else {
-            $message = "ID tidak ditemukan!";
-            $messageType = "error";
+            $_SESSION['flash_message'] = "ID tidak ditemukan, pastikan ID yang dimasukkan benar.";
+            $_SESSION['flash_message_type'] = "error";
         }
+        header("Location: Main.php");
+        exit;
     }
 
     // DELETE
@@ -121,12 +174,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($idx != -1) {
             array_splice($_SESSION['dataFilm'], $idx, 1);
-            $message = "Data Film berhasil dihapus!";
-            $messageType = "success";
+            $_SESSION['flash_message'] = "Data Film berhasil dihapus!";
+            $_SESSION['flash_message_type'] = "success";
         } else {
-            $message = "ID tidak ditemukan!";
-            $messageType = "error";
+            $_SESSION['flash_message'] = "ID tidak ditemukan, pastikan ID yang dimasukkan benar.";
+            $_SESSION['flash_message_type'] = "error";
         }
+        header("Location: Main.php");
+        exit;
     }
 }
 
@@ -230,6 +285,8 @@ if ($editId != '') {
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            display: inline-block;
         }
         .btn:hover {
             transform: translateY(-2px);
@@ -396,7 +453,7 @@ if ($editId != '') {
 <body>
     <div class="container">
         <div class="header">
-            <h1>SISTEM MANAJEMEN DATA FILM</h1>
+            <h1>SISTEM MANAJEMEN DATA FILM BIOSKOP</h1>
             <p>Kelola data film Anda dengan mudah</p>
         </div>
 
@@ -412,28 +469,39 @@ if ($editId != '') {
             <h2><?= $editFilm ? 'Edit Data Film' : 'Tambah Data Film' ?></h2>
             <form method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="<?= $editFilm ? 'update' : 'insert' ?>">
-                <?php if ($editFilm): ?>
-                    <input type="hidden" name="id" value="<?= $editFilm->getId() ?>">
-                <?php endif; ?>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Nama Film</label>
-                        <input type="text" name="nama" value="<?= $editFilm ? $editFilm->getNama() : '' ?>" required>
+                        <label>ID Film</label>
+                        <input type="text" name="id" value="<?= $editFilm ? $editFilm->getId() : '' ?>" required>
                     </div>
                     <div class="form-group">
-                        <label>Durasi (menit)</label>
-                        <input type="number" name="durasi" value="<?= $editFilm ? $editFilm->getDurasi() : '' ?>" required>
+                        <label>Nama Film</label>
+                        <input type="text" name="nama" value="<?= $editFilm ? $editFilm->getNama() : '' ?>" required>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Rating (1-10)</label>
-                        <input type="number" name="rating" step="0.01" min="1" max="10" value="<?= $editFilm ? $editFilm->getRating() : '' ?>" required>
+                        <label>Durasi (menit)</label>
+                        <input type="text" name="durasi" value="<?= $editFilm ? $editFilm->getDurasi() : '' ?>" required>
                     </div>
                     <div class="form-group">
+                        <label>Rating (1-10)</label>
+                        <input type="text" name="rating" value="<?= $editFilm ? $editFilm->getRating() : '' ?>" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
                         <label>Gambar Poster</label>
+                        <?php if ($editFilm && $editFilm->getGambar() != ''): ?>
+                            <div style="margin-bottom: 10px;">
+                                <img src="<?= $editFilm->getGambar() ?>" alt="Gambar saat ini" style="max-width: 150px; max-height: 200px; border-radius: 8px;">
+                                <p style="font-size: 12px; color: #999; margin-top: 5px;">Gambar saat ini. Kosongkan jika tidak ingin mengubah.</p>
+                            </div>
+                            <input type="hidden" name="gambar_lama" value="<?= $editFilm->getGambar() ?>">
+                        <?php endif; ?>
                         <input type="file" name="gambar" accept="image/*">
                     </div>
                 </div>
